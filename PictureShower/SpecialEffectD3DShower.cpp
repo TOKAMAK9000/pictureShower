@@ -98,15 +98,12 @@ bool CSpecialEffectD3DShower::Render(hvframe * frame)
 		ShowSurfaceVerticalBlind(1, frame);
 		break;
 	case 25:
-		testEffect(frame);
-		break;
-	case 26:
 		testTextureShower(0,frame);
 		break;
-	case 27:
+	case 26:
 		testTextureShower(1, frame);
 		break;
-	case 28:
+	case 27:
 		testTextureShower(2, frame);
 		break;
 	}
@@ -177,11 +174,19 @@ void CSpecialEffectD3DShower::ShowSurfaceNormal(hvframe * frame)
 
 	//线程
 	EnterCriticalSection(&m_critial);
-
+	if (this->initPictureEveryTime) {
+		testInit();
+		if (m_DisplayMode)
+			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+		else
+			m_rt = m_rtViewport;
+	}
 
 	m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	m_pDirect3DDevice->BeginScene();
 	IDirect3DSurface9 * pBackBuffer = NULL;
+
+
 
 	//？？？？？？？？？？？？？？？？？？？？？？？？？？？？
 	//给m_rt赋值
@@ -215,68 +220,8 @@ void CSpecialEffectD3DShower::testInit()
 // to be checked
 //可能存在的问题？
 //在函数中定义的变量h未使用，故对程序进行了微调。微调之前的版本在下方注释中。
+//update：注释已删除
 
-
-/*
-void CSpecialEffectD3DShower::ShowSurfaceScan(int direction, hvframe * frame)
-{
-int length;
-int steps,i;
-double w, h;
-int trantime;
-CRect pr;
-CRect m_rt;
-
-if (m_DisplayMode)
-calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
-else
-m_rt = m_rtViewport;
-
-pr = m_rt;
-
-
-steps = m_TransitionDuration *  mPicturesPerSecond;
-w = (double)(pr.Width())/steps;
-h = (double)(pr.Height())/steps;
-
-trantime = 1000 / mPicturesPerSecond;
-
-EnterCriticalSection(&m_critial);
-m_pDirect3DDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
-m_pDirect3DDevice->BeginScene();
-IDirect3DSurface9 * pBackBuffer = NULL;
-m_pDirect3DDevice->GetBackBuffer(0,0,D3DBACKBUFFER_TYPE_MONO,&pBackBuffer);
-m_pDirect3DDevice->StretchRect(m_pDirect3DSurfaceRender,NULL,pBackBuffer,&m_rt,D3DTEXF_LINEAR);
-m_pDirect3DDevice->EndScene();
-
-for (i = 1; i < steps; i++)
-{
-length = (int)(w*i);
-switch (direction)
-{
-default:
-case 0:
-pr.right = pr.left + length;
-break;
-case 1:
-pr.left = pr.right - length;
-break;
-case 2:
-pr.bottom = pr.top + length;
-break;
-case 3:
-pr.top = pr.bottom - length;
-break;
-}
-if (length>0)
-m_pDirect3DDevice->Present(&pr, &pr, NULL, NULL);
-
-Sleep(trantime);
-}
-m_pDirect3DDevice->Present(&m_rt, &m_rt, NULL, NULL);
-LeaveCriticalSection(&m_critial);
-}
-*/
 void CSpecialEffectD3DShower::ShowSurfaceScan(int direction, hvframe * frame)
 {
 	int length_w,length_h;
@@ -301,6 +246,15 @@ void CSpecialEffectD3DShower::ShowSurfaceScan(int direction, hvframe * frame)
 	trantime = 1000 / mPicturesPerSecond;
 
 	EnterCriticalSection(&m_critial);
+
+	if (this->initPictureEveryTime) {
+		testInit();
+		if (m_DisplayMode)
+			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+		else
+			m_rt = m_rtViewport;
+	}
+
 	m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	m_pDirect3DDevice->BeginScene();
 	IDirect3DSurface9 * pBackBuffer = NULL;
@@ -362,35 +316,39 @@ void CSpecialEffectD3DShower::ShowSurfaceSlide(int direction, hvframe * frame)
 
 	EnterCriticalSection(&m_critial);
 
-
+	
 	if (this->initPictureEveryTime){
 		testInit();
+		if (m_DisplayMode)
+			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+		else
+			m_rt = m_rtViewport;
 	}
 
 	switch (direction)
 	{
 	default:
 	case 0:
-		pr.right = m_rtViewport.right;
-		pr.top = m_rtViewport.top;
-		pr.bottom = m_rtViewport.bottom;
+		pr.right = m_rt.right;
+		pr.top = m_rt.top;
+		pr.bottom = m_rt.bottom;
 
-		sr.top = m_rtViewport.top;
-		sr.bottom = m_rtViewport.bottom;
-		sr.left = m_rtViewport.left;
+		sr.top = m_rt.top;
+		sr.bottom = m_rt.bottom;
+		sr.left = m_rt.left;
 
 		for (i = 0; i<steps; i++)
 		{
 			length = (int)(i*w);
 			if (i == (steps - 1))
 			{
-				pr.left = m_rtViewport.left;
-				sr.right = m_rtViewport.right;
+				pr.left = m_rt.left;
+				sr.right = m_rt.right;
 			}
 			else
 			{
-				pr.left = m_rtViewport.right - length;
-				sr.right = m_rtViewport.left + length;
+				pr.left = m_rt.right - length;
+				sr.right = m_rt.left + length;
 			}
 
 			if (length > 0)
@@ -407,26 +365,26 @@ void CSpecialEffectD3DShower::ShowSurfaceSlide(int direction, hvframe * frame)
 		}
 		break;
 	case 1:
-		pr.left = m_rtViewport.left;
-		pr.top = m_rtViewport.top;
-		pr.bottom = m_rtViewport.bottom;
+		pr.left = m_rt.left;
+		pr.top = m_rt.top;
+		pr.bottom = m_rt.bottom;
 
-		sr.top = m_rtViewport.top;
-		sr.bottom = m_rtViewport.bottom;
-		sr.right = m_rtViewport.right;
+		sr.top = m_rt.top;
+		sr.bottom = m_rt.bottom;
+		sr.right = m_rt.right;
 
 		for (i = 0; i<steps; i++)
 		{
 			length = (int)(i*w);
 			if (i == (steps - 1))
 			{
-				pr.right = m_rtViewport.right;
-				sr.left = m_rtViewport.left;
+				pr.right = m_rt.right;
+				sr.left = m_rt.left;
 			}
 			else
 			{
-				pr.right = m_rtViewport.left + length;
-				sr.left = m_rtViewport.right - length;
+				pr.right = m_rt.left + length;
+				sr.left = m_rt.right - length;
 			}
 
 			if (length > 0)
@@ -443,26 +401,26 @@ void CSpecialEffectD3DShower::ShowSurfaceSlide(int direction, hvframe * frame)
 		}
 		break;
 	case 2:
-		pr.bottom = m_rtViewport.bottom;
-		pr.left = m_rtViewport.left;
-		pr.right = m_rtViewport.right;
+		pr.bottom = m_rt.bottom;
+		pr.left = m_rt.left;
+		pr.right = m_rt.right;
 
-		sr.left = m_rtViewport.left;
-		sr.right = m_rtViewport.right;
-		sr.top = m_rtViewport.top;
+		sr.left = m_rt.left;
+		sr.right = m_rt.right;
+		sr.top = m_rt.top;
 
 		for (i = 0; i<steps; i++)
 		{
 			length = (int)(i*h);
 			if (i == (steps - 1))
 			{
-				pr.top = m_rtViewport.top;
-				sr.bottom = m_rtViewport.bottom;
+				pr.top = m_rt.top;
+				sr.bottom = m_rt.bottom;
 			}
 			else
 			{
-				pr.top = m_rtViewport.bottom - length;
-				sr.bottom = m_rtViewport.top + length;
+				pr.top = m_rt.bottom - length;
+				sr.bottom = m_rt.top + length;
 			}
 
 			if (length > 0)
@@ -478,26 +436,26 @@ void CSpecialEffectD3DShower::ShowSurfaceSlide(int direction, hvframe * frame)
 		}
 		break;
 	case 3:
-		pr.top = m_rtViewport.top;
-		pr.left = m_rtViewport.left;
-		pr.right = m_rtViewport.right;
+		pr.top = m_rt.top;
+		pr.left = m_rt.left;
+		pr.right = m_rt.right;
 
-		sr.left = m_rtViewport.left;
-		sr.right = m_rtViewport.right;
-		sr.bottom = m_rtViewport.bottom;
+		sr.left = m_rt.left;
+		sr.right = m_rt.right;
+		sr.bottom = m_rt.bottom;
 
 		for (i = 0; i<steps; i++)
 		{
 			length = (int)(i*h);
 			if (i == (steps - 1))
 			{
-				pr.bottom = m_rtViewport.bottom;
-				sr.top = m_rtViewport.top;
+				pr.bottom = m_rt.bottom;
+				sr.top = m_rt.top;
 			}
 			else
 			{
-				pr.bottom = m_rtViewport.top + length;
-				sr.top = m_rtViewport.bottom - length;
+				pr.bottom = m_rt.top + length;
+				sr.top = m_rt.bottom - length;
 			}
 
 			if (length > 0)
@@ -547,6 +505,14 @@ void CSpecialEffectD3DShower::ShowSurfaceButt(int direction, hvframe * frame)
 	trantime = 1000 / mPicturesPerSecond;
 
 	EnterCriticalSection(&m_critial);
+
+	if (this->initPictureEveryTime) {
+		testInit();
+		if (m_DisplayMode)
+			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+		else
+			m_rt = m_rtViewport;
+	}
 
 	m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	m_pDirect3DDevice->BeginScene();
@@ -615,6 +581,14 @@ void CSpecialEffectD3DShower::ShowSurfaceCenterFull(hvframe * frame)
 
 	EnterCriticalSection(&m_critial);
 
+	if (this->initPictureEveryTime) {
+		testInit();
+		if (m_DisplayMode)
+			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+		else
+			m_rt = m_rtViewport;
+	}
+
 	m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	m_pDirect3DDevice->BeginScene();
 	IDirect3DSurface9 * pBackBuffer = NULL;
@@ -673,6 +647,15 @@ void CSpecialEffectD3DShower::ShowSurfaceEnlarge(hvframe * frame)
 	trantime = 1000 / mPicturesPerSecond;
 
 	EnterCriticalSection(&m_critial);
+
+	if (this->initPictureEveryTime) {
+		testInit();
+		if (m_DisplayMode)
+			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+		else
+			m_rt = m_rtViewport;
+	}
+
 	m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	for (i = 1; i<steps; i++)
 	{
@@ -723,6 +706,14 @@ void CSpecialEffectD3DShower::ShowSurfaceDiagonalFull(int direction, hvframe * f
 	trantime = 1000 / mPicturesPerSecond;
 
 	EnterCriticalSection(&m_critial);
+
+	if (this->initPictureEveryTime) {
+		testInit();
+		if (m_DisplayMode)
+			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+		else
+			m_rt = m_rtViewport;
+	}
 
 	m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	m_pDirect3DDevice->BeginScene();
@@ -852,6 +843,15 @@ void CSpecialEffectD3DShower::ShowSurfaceDiagonalEnlarge(int direction, hvframe 
 			if (offy > 0 && offx > 0)
 			{
 				EnterCriticalSection(&m_critial);
+
+				if (this->initPictureEveryTime) {
+					testInit();
+					if (m_DisplayMode)
+						calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+					else
+						m_rt = m_rtViewport;
+				}
+
 				m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 				m_pDirect3DDevice->BeginScene();
 				IDirect3DSurface9 * pBackBuffer = NULL;
@@ -880,6 +880,15 @@ void CSpecialEffectD3DShower::ShowSurfaceDiagonalEnlarge(int direction, hvframe 
 			if (offy > 0 && offx > 0)
 			{
 				EnterCriticalSection(&m_critial);
+
+				if (this->initPictureEveryTime) {
+					testInit();
+					if (m_DisplayMode)
+						calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+					else
+						m_rt = m_rtViewport;
+				}
+
 				m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 				m_pDirect3DDevice->BeginScene();
 				IDirect3DSurface9 * pBackBuffer = NULL;
@@ -908,6 +917,15 @@ void CSpecialEffectD3DShower::ShowSurfaceDiagonalEnlarge(int direction, hvframe 
 			if (offy > 0 && offx > 0)
 			{
 				EnterCriticalSection(&m_critial);
+
+				if (this->initPictureEveryTime) {
+					testInit();
+					if (m_DisplayMode)
+						calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+					else
+						m_rt = m_rtViewport;
+				}
+
 				m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 				m_pDirect3DDevice->BeginScene();
 				IDirect3DSurface9 * pBackBuffer = NULL;
@@ -936,6 +954,15 @@ void CSpecialEffectD3DShower::ShowSurfaceDiagonalEnlarge(int direction, hvframe 
 			if (offy > 0 && offx > 0)
 			{
 				EnterCriticalSection(&m_critial);
+
+				if (this->initPictureEveryTime) {
+					testInit();
+					if (m_DisplayMode)
+						calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+					else
+						m_rt = m_rtViewport;
+				}
+
 				m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 				m_pDirect3DDevice->BeginScene();
 				IDirect3DSurface9 * pBackBuffer = NULL;
@@ -983,6 +1010,14 @@ void CSpecialEffectD3DShower::ShowSurfaceRandBlock(hvframe * frame)
 	srand((unsigned int)time(0));
 
 	EnterCriticalSection(&m_critial);
+
+	if (this->initPictureEveryTime) {
+		testInit();
+		if (m_DisplayMode)
+			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+		else
+			m_rt = m_rtViewport;
+	}
 
 	m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	m_pDirect3DDevice->BeginScene();
@@ -1046,6 +1081,14 @@ void CSpecialEffectD3DShower::ShowSurfacePullCurtain(hvframe * frame)
 
 	EnterCriticalSection(&m_critial);
 
+	if (this->initPictureEveryTime) {
+		testInit();
+		if (m_DisplayMode)
+			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+		else
+			m_rt = m_rtViewport;
+	}
+
 	m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	m_pDirect3DDevice->BeginScene();
 	IDirect3DSurface9 * pBackBuffer = NULL;
@@ -1087,6 +1130,15 @@ void CSpecialEffectD3DShower::ShowSurfaceVerticalBlind(int direction, hvframe * 
 	w = width / 10;
 
 	EnterCriticalSection(&m_critial);
+
+	if (this->initPictureEveryTime) {
+		testInit();
+		if (m_DisplayMode)
+			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+		else
+			m_rt = m_rtViewport;
+	}
+
 	for (i = 0; i<10; i++)
 	{
 		if (direction)
@@ -1157,6 +1209,16 @@ void CSpecialEffectD3DShower::testTextureShower(int mode,hvframe *frame)
 	else
 		m_rt = m_rtViewport;
 
+	EnterCriticalSection(&m_critial);
+
+	if (this->initPictureEveryTime) {
+		testInit();
+		if (m_DisplayMode)
+			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
+		else
+			m_rt = m_rtViewport;
+	}
+
 	m_pTextureShower.InitD3D(mHand, m_rt.Width(), m_rt.Height(),mode);
 
 	m_pTextureShower.Render(frame);
@@ -1168,6 +1230,6 @@ void CSpecialEffectD3DShower::testTextureShower(int mode,hvframe *frame)
 	m_pDirect3DDevice->EndScene();
 
 
-	//m_pTextureShower.Cleanup();
+	m_pTextureShower.Cleanup();
 	LeaveCriticalSection(&m_critial);
 }

@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "D3D9TextureShower.h"
+#include "D3DShower.h"
 
 
 CD3D9TextureShower::CD3D9TextureShower()
 {
+
 }
 
 
@@ -220,3 +222,5 @@ bool CD3D9TextureShower::Render(hvframe * frame)
 
 	return true;
 }
+
+
