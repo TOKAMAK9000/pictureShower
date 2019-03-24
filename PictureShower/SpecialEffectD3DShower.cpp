@@ -174,6 +174,7 @@ void CSpecialEffectD3DShower::ShowSurfaceNormal(hvframe * frame)
 
 	//线程
 	EnterCriticalSection(&m_critial);
+
 	if (this->initPictureEveryTime) {
 		testInit();
 		if (m_DisplayMode)
@@ -184,6 +185,7 @@ void CSpecialEffectD3DShower::ShowSurfaceNormal(hvframe * frame)
 
 	m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	m_pDirect3DDevice->BeginScene();
+
 	IDirect3DSurface9 * pBackBuffer = NULL;
 
 
@@ -194,6 +196,7 @@ void CSpecialEffectD3DShower::ShowSurfaceNormal(hvframe * frame)
 		calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
 	else
 		m_rt = m_rtViewport;
+
 	m_pDirect3DDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
 
 	//将源矩形的内容复制到目标矩形。 源矩形可以通过副本进行拉伸和过滤。 
@@ -202,6 +205,7 @@ void CSpecialEffectD3DShower::ShowSurfaceNormal(hvframe * frame)
 	m_pDirect3DDevice->StretchRect(m_pDirect3DSurfaceRender, NULL, pBackBuffer, &m_rt, D3DTEXF_LINEAR);
 	m_pDirect3DDevice->EndScene();
 	m_pDirect3DDevice->Present(NULL, NULL, NULL, NULL);
+
 	LeaveCriticalSection(&m_critial);
 }
 
@@ -1230,6 +1234,6 @@ void CSpecialEffectD3DShower::testTextureShower(int mode,hvframe *frame)
 	m_pDirect3DDevice->EndScene();
 
 
-	m_pTextureShower.Cleanup();
+	//m_pTextureShower.Cleanup();
 	LeaveCriticalSection(&m_critial);
 }

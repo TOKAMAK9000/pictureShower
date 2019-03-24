@@ -1,6 +1,4 @@
-
 // PictureShowerDlg.cpp : 实现文件
-//
 
 #include "stdafx.h"
 #include "PictureShower.h"
