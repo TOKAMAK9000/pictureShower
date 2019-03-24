@@ -1,4 +1,8 @@
 #include "stdafx.h"
+
+/*
+
+#include "stdafx.h"
 #include "D3D9TextureShower.h"
 #include "D3DShower.h"
 
@@ -70,7 +74,10 @@ int CD3D9TextureShower::InitD3D(HWND hwnd, unsigned long lWidth, unsigned long l
 	D3DSWAPEFFECT_DISCARD:清除后台缓存的内容
 	D3DSWAPEEFECT_FLIP:保留后台缓存的内容。当缓存区>1时。
 	D3DSWAPEFFECT_COPY: 保留后台缓存的内容，缓冲区=1时。
-	一般情况下使用D3DSWAPEFFECT_DISCAR*/
+	一般情况下使用D3DSWAPEFFECT_DISCAR
+
+
+
 	d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 	d3dpp.hDeviceWindow = hwnd;
 	d3dpp.Windowed = TRUE;
@@ -111,7 +118,7 @@ int CD3D9TextureShower::InitD3D(HWND hwnd, unsigned long lWidth, unsigned long l
 		return -1;
 	}
 
-	/* -0.5f is a "feature" of DirectX and it seems to apply to Direct3d also */
+	// -0.5f is a "feature" of DirectX and it seems to apply to Direct3d also 
 	CUSTOMVERTEX vertices[] = {
 		{ -0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 0.0f },
 		{ lWidth - 0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 0.0f },
@@ -224,3 +231,4 @@ bool CD3D9TextureShower::Render(hvframe * frame)
 }
 
 
+*/

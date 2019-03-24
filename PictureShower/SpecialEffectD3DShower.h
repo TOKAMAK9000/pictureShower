@@ -1,6 +1,5 @@
 #pragma once
 #include "d3dshower.h"
-#include "D3D9TextureShower.h"
 class CSpecialEffectD3DShower :
 	public CD3DShower
 {

@@ -1205,7 +1205,7 @@ void CSpecialEffectD3DShower::testEffect(hvframe *frame){
 
 void CSpecialEffectD3DShower::testTextureShower(int mode,hvframe *frame) 
 {
-	CD3D9TextureShower m_pTextureShower;
+	CD3DShower m_pTextureShower;
 	CRect m_rt;
 
 	if (m_DisplayMode)
@@ -1223,9 +1223,9 @@ void CSpecialEffectD3DShower::testTextureShower(int mode,hvframe *frame)
 			m_rt = m_rtViewport;
 	}
 
-	m_pTextureShower.InitD3D(mHand, m_rt.Width(), m_rt.Height(),mode);
+	m_pTextureShower.InitD3D_texture(mHand, m_rt.Width(), m_rt.Height(),mode);
 
-	m_pTextureShower.Render(frame);
+	m_pTextureShower.RenderTexture(frame);
 
 
 
@@ -1234,6 +1234,6 @@ void CSpecialEffectD3DShower::testTextureShower(int mode,hvframe *frame)
 	m_pDirect3DDevice->EndScene();
 
 
-	//m_pTextureShower.Cleanup();
+	m_pTextureShower.Cleanup();
 	LeaveCriticalSection(&m_critial);
 }
