@@ -182,7 +182,7 @@ int CD3DShower::InitD3D_texture(HWND hwnd, unsigned long lWidth, unsigned long l
 	}
 	// Create Vertex Buffer
 	lRet = m_pDirect3DDevice->CreateVertexBuffer(4 * sizeof(CUSTOMVERTEX),
-		0, D3DFVF_NORMAL, D3DPOOL_DEFAULT, &m_pDirect3DVertexBuffer, NULL);
+		0, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &m_pDirect3DVertexBuffer, NULL);
 	if (FAILED(lRet))
 	{
 		LeaveCriticalSection(&m_critial);
@@ -357,7 +357,7 @@ bool CD3DShower::RenderTexture(hvframe * frame)
 		0, sizeof(CUSTOMVERTEX));
 
 	//Sets the current vertex stream declaration.
-	lRet = m_pDirect3DDevice->SetFVF(D3DFVF_NORMAL);
+	lRet = m_pDirect3DDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
 
 	//Renders a sequence of nonindexed, geometric primitives of the 
 	//specified type from the current set of data input streams.
