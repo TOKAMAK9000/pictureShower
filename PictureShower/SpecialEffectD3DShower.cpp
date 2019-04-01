@@ -1217,10 +1217,11 @@ void CSpecialEffectD3DShower::testTextureShower(int mode,hvframe *frame)
 
 	if (this->initPictureEveryTime) {
 		testInit();
+		/*
 		if (m_DisplayMode)
 			calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
 		else
-			m_rt = m_rtViewport;
+			m_rt = m_rtViewport;*/
 	}
 
 	m_pTextureShower.InitD3D_texture(mHand, m_rt.Width(), m_rt.Height(),mode);

@@ -105,6 +105,7 @@ int CD3DShower::InitD3D(HWND hwnd)
 		m_pDirect3DSurfaceRender = NULL;
 		return -1;
 	}
+	m_pDirect3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	return 0;
 }
@@ -213,6 +214,14 @@ int CD3DShower::InitD3D_texture(HWND hwnd, unsigned long lWidth, unsigned long l
 		{ -0.5f, lHeight - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 1.0f }
 	};
 
+	m_pDirect3DDevice->CreateVertexBuffer(3 * sizeof(CUSTOMVERTEX),
+		0,
+		D3DFVF_CUSTOMVERTEX,
+		D3DPOOL_MANAGED,
+		&m_pDirect3DVertexBuffer,
+		NULL);
+
+
 
 	// Fill Vertex Buffer
 	CUSTOMVERTEX *pVertex;
@@ -274,7 +283,7 @@ bool CD3DShower::Render( hvframe * frame)
 		return false;
 
 	EnterCriticalSection(&m_critial);
-	m_pDirect3DDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
+	m_pDirect3DDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 0.0f, 0 );
 	m_pDirect3DDevice->BeginScene();
 	IDirect3DSurface9 * pBackBuffer = NULL;
 	
@@ -343,7 +352,7 @@ bool CD3DShower::RenderTexture(hvframe * frame)
 
 	//Clears one or more surfaces
 	lRet = m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET,
-		D3DCOLOR_XRGB(0, 255, 0), 1.0f, 0);
+		D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
 	//Begin the scene
 	if (FAILED(m_pDirect3DDevice->BeginScene())) {
@@ -358,6 +367,54 @@ bool CD3DShower::RenderTexture(hvframe * frame)
 
 	//Sets the current vertex stream declaration.
 	lRet = m_pDirect3DDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
+
+
+
+
+
+
+
+
+	D3DXMATRIX matRotateY;    // a matrix to store the rotation information
+
+	static float index = 0.0f; 
+	index += 0.05f;    // an ever-increasing float value
+
+	// build a matrix to rotate the model based on the increasing float value
+	D3DXMatrixRotationY(&matRotateY, index);
+
+	// tell Direct3D about our matrix
+	m_pDirect3DDevice->SetTransform(D3DTS_WORLD, &matRotateY);
+
+	D3DXMATRIX matView;    // the view transform matrix
+
+	D3DXMatrixLookAtLH(&matView,
+		&D3DXVECTOR3(0.0f, 0.0f, 0.1f),    // the camera position
+		&D3DXVECTOR3(0.0f, 0.0f, 0.0f),    // the look-at position
+		&D3DXVECTOR3(0.0f, 1.0f, 0.0f));    // the up direction
+
+	m_pDirect3DDevice->SetTransform(D3DTS_VIEW, &matView);    // set the view transform to matView
+
+	D3DXMATRIX matProjection;     // the projection transform matrix
+
+	float temp;
+	temp = 16 / 9;
+
+
+	D3DXMatrixPerspectiveFovLH(&matProjection,
+		D3DXToRadian(45),    // the horizontal field of view
+		temp, // aspect ratio
+		1.0f,    // the near view-plane
+		100.0f);    // the far view-plane
+
+	m_pDirect3DDevice->SetTransform(D3DTS_PROJECTION, &matProjection);    // set the projection
+
+
+
+
+
+
+
 
 	//Renders a sequence of nonindexed, geometric primitives of the 
 	//specified type from the current set of data input streams.
