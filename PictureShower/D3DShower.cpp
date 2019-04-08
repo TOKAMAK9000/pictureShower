@@ -192,29 +192,30 @@ int CD3DShower::InitD3D_texture(HWND hwnd, unsigned long lWidth, unsigned long l
 
 	/* -0.5f is a "feature" of DirectX and it seems to apply to Direct3d also */
 	CUSTOMVERTEX vertices[] = {
-		{ -0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 0.0f },
-		{ lWidth - 0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 0.0f },
-		{ lWidth - 0.5f, lHeight - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 1.0f },
-		{ -0.5f, lHeight - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 1.0f }
+		{ -0.5f, -0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255)},
+		{ lWidth - 0.5f, -0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255)},
+		{ lWidth - 0.5f, lHeight - 0.5f, 0.0f,D3DCOLOR_ARGB(255, 255, 255, 255)},
+		{ -0.5f, lHeight - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255)}
 	};
 
 	//Rotate Texture?
 	CUSTOMVERTEX vertices_Rotate[] = {
-		{ lWidth / 4 - 0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 0.0f },
-		{ lWidth - 0.5f, lHeight / 4 - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 0.0f },
-		{ lWidth * 3 / 4 - 0.5f, lHeight - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 1.0f },
-		{ -0.5f, lHeight * 3 / 4 - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 1.0f }
+		{ lWidth / 4 - 0.5f, -0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255)},
+		{ lWidth - 0.5f, lHeight / 4 - 0.5f, 0.0f,D3DCOLOR_ARGB(255, 255, 255, 255)},
+		{ lWidth * 3 / 4 - 0.5f, lHeight - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255) },
+		{ -0.5f, lHeight * 3 / 4 - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255)}
 	};
 
 	//half texture
 	CUSTOMVERTEX vertices_half[] = {
-		{ -0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 0.0f },
-		{ lWidth - 0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.5f, 0.0f },
-		{ lWidth - 0.5f, lHeight - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.5f, 1.0f },
-		{ -0.5f, lHeight - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 1.0f }
+		{ -0.5f, -0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255) },
+		{ lWidth - 0.5f, -0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255)},
+		{ lWidth - 0.5f, lHeight - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255)},
+		{ -0.5f, lHeight - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255)}
 	};
+	CUSTOMVERTEX *pVertex;
 
-	m_pDirect3DDevice->CreateVertexBuffer(3 * sizeof(CUSTOMVERTEX),
+	m_pDirect3DDevice->CreateVertexBuffer(4 * sizeof(CUSTOMVERTEX),
 		0,
 		D3DFVF_CUSTOMVERTEX,
 		D3DPOOL_MANAGED,
@@ -224,7 +225,7 @@ int CD3DShower::InitD3D_texture(HWND hwnd, unsigned long lWidth, unsigned long l
 
 
 	// Fill Vertex Buffer
-	CUSTOMVERTEX *pVertex;
+	
 	lRet = m_pDirect3DVertexBuffer->Lock(0, 4 * sizeof(CUSTOMVERTEX), (void**)&pVertex, 0);
 	if (FAILED(lRet)) {
 		LeaveCriticalSection(&m_critial);
@@ -371,25 +372,24 @@ bool CD3DShower::RenderTexture(hvframe * frame)
 
 
 
+	
+	CRect m_rt;
+	calculate_display_rect(&m_rt, frame->mImg_Width, frame->mImg_Height, m_rtViewport.Width(), m_rtViewport.Height());
 
 
+	D3DXMATRIX matRotateX;    // a matrix to store the rotation information
 
-
-	D3DXMATRIX matRotateY;    // a matrix to store the rotation information
-
-	static float index = 0.0f; 
-	index += 0.05f;    // an ever-increasing float value
-
+	float index = 0.2f; 
 	// build a matrix to rotate the model based on the increasing float value
-	D3DXMatrixRotationY(&matRotateY, index);
+	D3DXMatrixRotationX(&matRotateX, index);
 
 	// tell Direct3D about our matrix
-	m_pDirect3DDevice->SetTransform(D3DTS_WORLD, &matRotateY);
+	m_pDirect3DDevice->SetTransform(D3DTS_WORLD, &matRotateX);
 
 	D3DXMATRIX matView;    // the view transform matrix
 
 	D3DXMatrixLookAtLH(&matView,
-		&D3DXVECTOR3(0.0f, 0.0f, 0.1f),    // the camera position
+		&D3DXVECTOR3(0.0f, 0.0f, 2.0f),    // the camera position
 		&D3DXVECTOR3(0.0f, 0.0f, 0.0f),    // the look-at position
 		&D3DXVECTOR3(0.0f, 1.0f, 0.0f));    // the up direction
 
@@ -397,13 +397,10 @@ bool CD3DShower::RenderTexture(hvframe * frame)
 
 	D3DXMATRIX matProjection;     // the projection transform matrix
 
-	float temp;
-	temp = 16 / 9;
-
 
 	D3DXMatrixPerspectiveFovLH(&matProjection,
 		D3DXToRadian(45),    // the horizontal field of view
-		temp, // aspect ratio
+		1.77777f, // aspect ratio
 		1.0f,    // the near view-plane
 		100.0f);    // the far view-plane
 

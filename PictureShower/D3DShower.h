@@ -12,15 +12,14 @@ extern "C" {
 } // endof extern "C"
 #endif
 
-#define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX1)
+#define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE)
+
 
 
 typedef struct
 {
 	FLOAT       x, y, z;     // vertex untransformed position
-	FLOAT       rhw;         // eye distance
 	D3DCOLOR    diffuse;     // diffuse color
-	FLOAT       tu, tv;      // texture relative coordinates
 } CUSTOMVERTEX;
 
 typedef struct tagHVFrame
