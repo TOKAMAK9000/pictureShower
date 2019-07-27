@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "stdafx.h"
@@ -10,17 +9,15 @@ extern "C" {
 #endif
 #include "libavutil/frame.h"
 #ifdef __cplusplus
-} // endof extern "C"
+}
 #endif
 
-#define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX1)
 
-
+#define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
 typedef struct
 {
 	FLOAT       x, y, z;     // vertex untransformed position
-	FLOAT       rhw;         // eye distance
-	D3DCOLOR    diffuse;     // diffuse color
+	DWORD		diffuse;
 	FLOAT       tu, tv;      // texture relative coordinates
 } CUSTOMVERTEX;
 
@@ -55,9 +52,9 @@ public:
 	~CD3DShower(void);
 	void Cleanup(void);
 	int InitD3D(HWND hwnd);
-	int InitD3D_texture(HWND hwnd, unsigned long lWidth, unsigned long lHeight, int mode);
+	int InitD3D_texture(HWND hwnd, long lWidth, long lHeight, int mode);
 	virtual bool Render(hvframe * frame);
-	bool RenderTexture(hvframe * frame);
+	bool RenderTexture(hvframe * frame, long lWidth, long lHeight);
 	unsigned long GetWidth();
 	unsigned long GetHight();
 	void calculate_display_rect(CRect *rect, int img_width, int img_height, int scr_width, int scr_height);

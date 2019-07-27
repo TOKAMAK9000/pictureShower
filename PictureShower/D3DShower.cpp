@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "D3DShower.h"
 
 #pragma comment(lib, "d3d9.lib")
@@ -105,11 +105,12 @@ int CD3DShower::InitD3D(HWND hwnd)
 		m_pDirect3DSurfaceRender = NULL;
 		return -1;
 	}
+	m_pDirect3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	return 0;
 }
 
-int CD3DShower::InitD3D_texture(HWND hwnd, unsigned long lWidth, unsigned long lHeight, int mode)
+int CD3DShower::InitD3D_texture(HWND hwnd, long lWidth, long lHeight, int mode)
 {
 	HRESULT lRet;
 	InitializeCriticalSection(&m_critial);
@@ -144,11 +145,6 @@ int CD3DShower::InitD3D_texture(HWND hwnd, unsigned long lWidth, unsigned long l
 	d3dpp.BackBufferCount = 1;
 	d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
 
-	/*指定系统如何将后台缓冲区的内容复制到前台缓冲区，从而在屏幕上显示。它的值有：
-	D3DSWAPEFFECT_DISCARD:清除后台缓存的内容
-	D3DSWAPEEFECT_FLIP:保留后台缓存的内容。当缓存区>1时。
-	D3DSWAPEFFECT_COPY: 保留后台缓存的内容，缓冲区=1时。
-	一般情况下使用D3DSWAPEFFECT_DISCAR*/
 	d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 	d3dpp.hDeviceWindow = hwnd;
 	d3dpp.Windowed = TRUE;
@@ -191,31 +187,34 @@ int CD3DShower::InitD3D_texture(HWND hwnd, unsigned long lWidth, unsigned long l
 
 	/* -0.5f is a "feature" of DirectX and it seems to apply to Direct3d also */
 	CUSTOMVERTEX vertices[] = {
-		{ -0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 0.0f },
-		{ lWidth - 0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 0.0f },
-		{ lWidth - 0.5f, lHeight - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 1.0f },
-		{ -0.5f, lHeight - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 1.0f }
+		{ -lWidth /2 - 0.5f, -lHeight/2 - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 0, 0, 255), 0.0f, 0.0f },
+		{ -lWidth/2 - 0.5f, lHeight/2 - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 0, 0), 1.0f, 0.0f },
+		{ lWidth/2 - 0.5f, lHeight/2 - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 0, 255, 0), 1.0f, 1.0f },
+		{ -lWidth / 2 - 0.5f, lHeight/2 - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 0, 255), 0.0f, 1.0f }
 	};
 
 	//Rotate Texture?
 	CUSTOMVERTEX vertices_Rotate[] = {
-		{ lWidth / 4 - 0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 0.0f },
-		{ lWidth - 0.5f, lHeight / 4 - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 0.0f },
-		{ lWidth * 3 / 4 - 0.5f, lHeight - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 1.0f },
-		{ -0.5f, lHeight * 3 / 4 - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 1.0f }
+		{ lWidth / 4 - 0.5f, -0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 0.0f },
+		{ lWidth - 0.5f, lHeight / 4 - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 0.0f },
+		{ lWidth * 3 / 4 - 0.5f, lHeight - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 1.0f, 1.0f },
+		{ -0.5f, lHeight * 3 / 4 - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 1.0f }
 	};
 
 	//half texture
 	CUSTOMVERTEX vertices_half[] = {
-		{ -0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 0.0f },
-		{ lWidth - 0.5f, -0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.5f, 0.0f },
-		{ lWidth - 0.5f, lHeight - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.5f, 1.0f },
-		{ -0.5f, lHeight - 0.5f, 0.0f, 1.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 1.0f }
+		{ -0.5f, -0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 0.0f },
+		{ lWidth - 0.5f, -0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.5f, 0.0f },
+		{ lWidth - 0.5f, lHeight - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.5f, 1.0f },
+		{ -0.5f, lHeight - 0.5f, 0.0f, D3DCOLOR_ARGB(255, 255, 255, 255), 0.0f, 1.0f }
 	};
+	CUSTOMVERTEX *pVertex;
+
+
 
 
 	// Fill Vertex Buffer
-	CUSTOMVERTEX *pVertex;
+	
 	lRet = m_pDirect3DVertexBuffer->Lock(0, 4 * sizeof(CUSTOMVERTEX), (void**)&pVertex, 0);
 	if (FAILED(lRet)) {
 		LeaveCriticalSection(&m_critial);
@@ -223,7 +222,8 @@ int CD3DShower::InitD3D_texture(HWND hwnd, unsigned long lWidth, unsigned long l
 	}
 	if (mode == 0)
 	{
-		memcpy(pVertex, vertices, sizeof(vertices));
+	memcpy(pVertex, vertices, sizeof(vertices));
+
 	}
 	if (mode == 1)
 	{
@@ -233,7 +233,6 @@ int CD3DShower::InitD3D_texture(HWND hwnd, unsigned long lWidth, unsigned long l
 	{
 		memcpy(pVertex, vertices_half, sizeof(vertices_half));
 	}
-
 
 	m_pDirect3DVertexBuffer->Unlock();
 	LeaveCriticalSection(&m_critial);
@@ -274,7 +273,7 @@ bool CD3DShower::Render( hvframe * frame)
 		return false;
 
 	EnterCriticalSection(&m_critial);
-	m_pDirect3DDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
+	m_pDirect3DDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 0.0f, 0 );
 	m_pDirect3DDevice->BeginScene();
 	IDirect3DSurface9 * pBackBuffer = NULL;
 	
@@ -312,7 +311,7 @@ bool CD3DShower::Render( hvframe * frame)
 
 
 
-bool CD3DShower::RenderTexture(hvframe * frame)
+bool CD3DShower::RenderTexture(hvframe * frame, long lWidth, long lHeight)
 {
 	LRESULT lRet;
 
@@ -345,20 +344,75 @@ bool CD3DShower::RenderTexture(hvframe * frame)
 	lRet = m_pDirect3DDevice->Clear(0, NULL, D3DCLEAR_TARGET,
 		D3DCOLOR_XRGB(0, 255, 0), 1.0f, 0);
 
+
+	if (lWidth == 0 || lHeight == 0)
+	{
+		RECT rt;
+		GetClientRect(mHand, &rt);
+		lWidth = rt.right - rt.left;
+		lHeight = rt.bottom - rt.top;
+	}
+
 	//Begin the scene
 	if (FAILED(m_pDirect3DDevice->BeginScene())) {
 		return false;
 	}
 
+
+
+	/*
+
+	D3DXMATRIX matRotateX;    // a matrix to store the rotation information
+	D3DXMatrixIdentity(&matRotateX);
+	// build a matrix to rotate the model based on the increasing float value
+	D3DXMatrixRotationY(&matRotateX, 0.2f);
+
+	// tell Direct3D about our matrix
+	m_pDirect3DDevice->SetTransform(D3DTS_WORLD, &matRotateX);
+
+	*/
+
+	D3DXMATRIX matView;    // the view transform matrix
+
+	D3DXMatrixLookAtLH(&matView,
+		&D3DXVECTOR3(2000.0f, 2000.0f, -2000.0f),    // the camera position
+		&D3DXVECTOR3(0.0f, 0.0f, 0.0f),    // the look-at position
+		&D3DXVECTOR3(0.0f, 1.0f, 0.0f));    // the up direction
+
+	m_pDirect3DDevice->SetTransform(D3DTS_VIEW, &matView);    // set the view transform to matView
+
+	D3DXMATRIX matProjection;     // the projection transform matrix
+
+
+	D3DXMatrixPerspectiveFovLH(&matProjection,
+		D3DXToRadian(45),    // the horizontal field of view
+		1.777, // aspect ratio  (FLOAT)lWidth/(FLOAT)lHeight
+		0.5f,    // the near view-plane
+		10000.0f);    // the far view-plane
+
+	m_pDirect3DDevice->SetTransform(D3DTS_PROJECTION, &matProjection);    // set the projection
+
+
+
+
+
+
+
+
+
+
+
+
 	lRet = m_pDirect3DDevice->SetTexture(0, m_pDirect3DTexture);
 
 	//Binds a vertex buffer to a device data stream.
 	m_pDirect3DDevice->SetStreamSource(0, m_pDirect3DVertexBuffer,
-		0, sizeof(CUSTOMVERTEX));
+		0, 4 * sizeof(CUSTOMVERTEX));
 
 	//Sets the current vertex stream declaration.
 	lRet = m_pDirect3DDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
 
+	
 	//Renders a sequence of nonindexed, geometric primitives of the 
 	//specified type from the current set of data input streams.
 	m_pDirect3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0, 2);
