@@ -1,7 +1,3 @@
-
-// PictureShowerDlg.h : Í·ÎÄ¼þ
-//
-
 #pragma once
 #include "afxwin.h"
 #include "SpecialEffectD3DShower.h"
@@ -14,34 +10,34 @@ extern "C" {
 #include "libavformat/avformat.h"
 #include "libswscale/swscale.h"
 #ifdef __cplusplus
-} // endof extern "C"
+}// endof extern "C"
 #endif
 
 //extern BOOL initPictureEveryTime;
 
-// CPictureShowerDlg ¶Ô»°¿ò
+// CPictureShowerDlg ï¿½Ô»ï¿½ï¿½ï¿½
 class CPictureShowerDlg : public CDialogEx
 {
 public:
 	hvframe * frame = NULL;
 	CSpecialEffectD3DShower * m_D3DShower = NULL;
-// ¹¹Ôì
+// ï¿½ï¿½ï¿½ï¿½
 public:
-	CPictureShowerDlg(CWnd* pParent = NULL);	// ±ê×¼¹¹Ôìº¯Êý
+	CPictureShowerDlg(CWnd* pParent = NULL);	// ï¿½ï¿½×¼ï¿½ï¿½ï¿½ìº¯ï¿½ï¿½
 
-// ¶Ô»°¿òÊý¾Ý
+// ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	enum { IDD = IDD_PICTURESHOWER_DIALOG };
 
 	protected:
-	//MFCÖÐÓÃÓÚ±äÁ¿ºÍ¿Ø¼þ¼ä¹ØÁªÊý¾ÝºÍ¿ØÖÆÊý¾ÝµÄºê
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV Ö§³Ö
+	//MFCï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½ï¿½Í¿Ø¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÝºÍ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÝµÄºï¿½
+	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV Ö§ï¿½ï¿½
 
 
-// ÊµÏÖ
+// Êµï¿½ï¿½
 protected:
 	HICON m_hIcon;
 
-	// Éú³ÉµÄÏûÏ¢Ó³Éäº¯Êý
+	// ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½Ï¢Ó³ï¿½äº¯ï¿½ï¿½
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
@@ -64,4 +60,11 @@ public:
 	//new
 	afx_msg void OnBnClickedCheck1();
 	bool initPictureEveryTime;
+	WINDOWPLACEMENT m_struOldWndpl;
+	WINDOWPLACEMENT m_struOldWndpPic;
+	CRect rectFullScreen;
+	BOOL bFullScreen;
+
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	afx_msg void OnBnClickedButton1();
 };

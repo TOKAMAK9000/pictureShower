@@ -62,6 +62,9 @@
     <ClCompile Include="D3D9TextureShower.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="speechRecognizerDemo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PictureShower.rc">
@@ -72,9 +75,13 @@
     <None Include="res\PictureShower.rc2">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\PictureShower.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\toolbar1.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

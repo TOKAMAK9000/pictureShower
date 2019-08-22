@@ -1,9 +1,10 @@
-// PictureShowerDlg.cpp : ÊµÏÖÎÄ¼ş
+// PictureShowerDlg.cpp : Êµï¿½ï¿½ï¿½Ä¼ï¿½
 
 #include "stdafx.h"
 #include "PictureShower.h"
 #include "PictureShowerDlg.h"
 #include "afxdialogex.h"
+#include "childDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -23,20 +24,20 @@ extern "C" {
 #endif
 
 
-// ÓÃÓÚÓ¦ÓÃ³ÌĞò¡°¹ØÓÚ¡±²Ëµ¥ÏîµÄ CAboutDlg ¶Ô»°¿ò
+// ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ã³ï¿½ï¿½ò¡°¹ï¿½ï¿½Ú¡ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ CAboutDlg ï¿½Ô»ï¿½ï¿½ï¿½
 
 class CAboutDlg : public CDialogEx
 {
 public:
 	CAboutDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	enum { IDD = IDD_ABOUTBOX };
 
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§ï¿½ï¿½
 
-// ÊµÏÖ
+// Êµï¿½ï¿½
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -54,7 +55,7 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CPictureShowerDlg ¶Ô»°¿ò
+// CPictureShowerDlg ï¿½Ô»ï¿½ï¿½ï¿½
 
 CPictureShowerDlg::CPictureShowerDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CPictureShowerDlg::IDD, pParent)
@@ -66,6 +67,7 @@ CPictureShowerDlg::CPictureShowerDlg(CWnd* pParent /*=NULL*/)
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	frame = new hvframe();
 	frame->pAVFrame = NULL;
+
 }
 
 void CPictureShowerDlg::DoDataExchange(CDataExchange* pDX)
@@ -86,18 +88,20 @@ BEGIN_MESSAGE_MAP(CPictureShowerDlg, CDialogEx)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_PLAY, &CPictureShowerDlg::OnBnClickedPlay)
 	ON_BN_CLICKED(CHECK1, &CPictureShowerDlg::OnBnClickedCheck1)
+	ON_WM_LBUTTONDBLCLK()
+	ON_BN_CLICKED(IDC_BUTTON1, &CPictureShowerDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
-// CPictureShowerDlg ÏûÏ¢´¦Àí³ÌĞò
+// CPictureShowerDlg ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 BOOL CPictureShowerDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// ½«¡°¹ØÓÚ...¡±²Ëµ¥ÏîÌí¼Óµ½ÏµÍ³²Ëµ¥ÖĞ¡£
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ÏµÍ³ï¿½Ëµï¿½ï¿½Ğ¡ï¿½
 
-	// IDM_ABOUTBOX ±ØĞëÔÚÏµÍ³ÃüÁî·¶Î§ÄÚ¡£
+	// IDM_ABOUTBOX ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³ï¿½ï¿½ï¿½î·¶Î§ï¿½Ú¡ï¿½
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
@@ -115,16 +119,19 @@ BOOL CPictureShowerDlg::OnInitDialog()
 		}
 	}
 
-	// ÉèÖÃ´Ë¶Ô»°¿òµÄÍ¼±ê¡£  µ±Ó¦ÓÃ³ÌĞòÖ÷´°¿Ú²»ÊÇ¶Ô»°¿òÊ±£¬¿ò¼Ü½«×Ô¶¯
-	//  Ö´ĞĞ´Ë²Ù×÷
-	SetIcon(m_hIcon, TRUE);			// ÉèÖÃ´óÍ¼±ê
-	SetIcon(m_hIcon, FALSE);		// ÉèÖÃĞ¡Í¼±ê
+	// ï¿½ï¿½ï¿½Ã´Ë¶Ô»ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ê¡£  ï¿½ï¿½Ó¦ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½Ç¶Ô»ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ü½ï¿½ï¿½Ô¶ï¿½
+	//  Ö´ï¿½Ğ´Ë²ï¿½ï¿½ï¿½
+	SetIcon(m_hIcon, TRUE);			// ï¿½ï¿½ï¿½Ã´ï¿½Í¼ï¿½ï¿½
+	SetIcon(m_hIcon, FALSE);		// ï¿½ï¿½ï¿½ï¿½Ğ¡Í¼ï¿½ï¿½
 
-	// TODO:  ÔÚ´ËÌí¼Ó¶îÍâµÄ³õÊ¼»¯´úÂë
+	// TODO:  ï¿½Ú´ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½ï¿½Ä³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	InitWindow();
 
-	return TRUE;  // ³ı·Ç½«½¹µãÉèÖÃµ½¿Ø¼ş£¬·ñÔò·µ»Ø TRUE
+	childDialog dlg;
+	dlg.m_showWindow();//åˆ›å»ºå‰¯çª—å£
+	
+	return TRUE;  // ï¿½ï¿½ï¿½Ç½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ò·µ»ï¿½ TRUE
 }
 
 void CPictureShowerDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -140,19 +147,19 @@ void CPictureShowerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 }
 
-// Èç¹ûÏò¶Ô»°¿òÌí¼Ó×îĞ¡»¯°´Å¥£¬ÔòĞèÒªÏÂÃæµÄ´úÂë
-//  À´»æÖÆ¸ÃÍ¼±ê¡£  ¶ÔÓÚÊ¹ÓÃÎÄµµ/ÊÓÍ¼Ä£ĞÍµÄ MFC Ó¦ÓÃ³ÌĞò£¬
-//  Õâ½«ÓÉ¿ò¼Ü×Ô¶¯Íê³É¡£
+// ï¿½ï¿½ï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½Å¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½
+//  ï¿½ï¿½ï¿½ï¿½ï¿½Æ¸ï¿½Í¼ï¿½ê¡£  ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½Äµï¿½/ï¿½ï¿½Í¼Ä£ï¿½Íµï¿½ MFC Ó¦ï¿½Ã³ï¿½ï¿½ï¿½
+//  ï¿½â½«ï¿½É¿ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½É¡ï¿½
 
 void CPictureShowerDlg::OnPaint()
 {
 	if (IsIconic())
 	{
-		CPaintDC dc(this); // ÓÃÓÚ»æÖÆµÄÉè±¸ÉÏÏÂÎÄ
+		CPaintDC dc(this); // ï¿½ï¿½ï¿½Ú»ï¿½ï¿½Æµï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-		// Ê¹Í¼±êÔÚ¹¤×÷Çø¾ØĞÎÖĞ¾ÓÖĞ
+		// Ê¹Í¼ï¿½ï¿½ï¿½Ú¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¾ï¿½ï¿½ï¿½
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
 		CRect rect;
@@ -160,7 +167,7 @@ void CPictureShowerDlg::OnPaint()
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
 
-		// »æÖÆÍ¼±ê
+		// ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½
 		dc.DrawIcon(x, y, m_hIcon);
 	}
 	else
@@ -169,8 +176,8 @@ void CPictureShowerDlg::OnPaint()
 	}
 }
 
-//µ±ÓÃ»§ÍÏ¶¯×îĞ¡»¯´°¿ÚÊ±ÏµÍ³µ÷ÓÃ´Ëº¯ÊıÈ¡µÃ¹â±ê
-//ÏÔÊ¾¡£
+//ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ÏµÍ³ï¿½ï¿½ï¿½Ã´Ëºï¿½ï¿½ï¿½È¡ï¿½Ã¹ï¿½ï¿½
+//ï¿½ï¿½Ê¾ï¿½ï¿½
 HCURSOR CPictureShowerDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
@@ -180,11 +187,11 @@ HCURSOR CPictureShowerDlg::OnQueryDragIcon()
 
 void CPictureShowerDlg::OnBnClickedReadpicturefile()
 {
-	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
+	// TODO:  ï¿½Ú´ï¿½ï¿½ï¿½Ó¿Ø¼ï¿½Í¨Öªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	CFileDialog fileDlg(true, _T(""), _T("*.*"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("All File (*.*)|*.*||"), NULL); 
-	if (fileDlg.DoModal() == IDOK)    //µ¯³ö¶Ô»°¿ò
+	if (fileDlg.DoModal() == IDOK)    //ï¿½ï¿½ï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½
 	{    
-		m_CurrentPicture = fileDlg.GetPathName();//µÃµ½ÍêÕûµÄÎÄ¼şÃûºÍÄ¿Â¼ÃûÍØÕ¹Ãû   
+		m_CurrentPicture = fileDlg.GetPathName();//ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½   
 		UpdateData(false);
 	}
 }
@@ -216,7 +223,7 @@ bool CPictureShowerDlg::DecodePicture(CString FileName)
 	uint8_t * out_buffer;
 	int ret;
 
-	//¼ÓÔØÍ¼Æ¬  
+	//ï¿½ï¿½ï¿½ï¿½Í¼Æ¬  
 	char szFileName[1024];
 	int i;
 	for (i = 0; i < FileName.GetLength(); i++)
@@ -376,7 +383,7 @@ void CPictureShowerDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
 
-	// TODO:  ÔÚ´Ë´¦Ìí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂë
+	// TODO:  ï¿½Ú´Ë´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	DeletePicture();
 }
 
@@ -389,7 +396,7 @@ void CPictureShowerDlg::DrawPicture()
 
 void CPictureShowerDlg::OnBnClickedPlay()
 {
-	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
+	// TODO:  ï¿½Ú´ï¿½ï¿½ï¿½Ó¿Ø¼ï¿½Í¨Öªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	UpdateData(true);
 
@@ -435,5 +442,62 @@ void CPictureShowerDlg::OnBnClickedCheck1()
 	}
 }
 
+void CPictureShowerDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+	if (!bFullScreen)
+	{
+		bFullScreen = true;
+
+		//è·å–ç³»ç»Ÿå±å¹•å®½é«˜  
+		int g_iCurScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+		int g_iCurScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+		//å°†PICTUREæ§ä»¶çš„åæ ‡è®¾ä¸ºå…¨å±å¤§å° 
+		GetDlgItem(IDC_PICTUREAREA)->MoveWindow(CRect(0, 0, g_iCurScreenWidth, g_iCurScreenHeight));
+
+		//ç”¨m_struOldWndplå¾—åˆ°å½“å‰çª—å£çš„æ˜¾ç¤ºçŠ¶æ€å’Œçª—ä½“ä½ç½®ï¼Œä»¥ä¾›é€€å‡ºå…¨å±åä½¿ç”¨  
+		GetWindowPlacement(&m_struOldWndpl);
+		GetDlgItem(IDC_PICTUREAREA)->GetWindowPlacement(&m_struOldWndpPic);
+
+		//è®¡ç®—å‡ºçª—å£å…¨å±æ˜¾ç¤ºå®¢æˆ·ç«¯æ‰€åº”è¯¥è®¾ç½®çš„çª—å£å¤§å°ï¼Œä¸»è¦ä¸ºäº†å°†ä¸éœ€è¦æ˜¾ç¤ºçš„çª—ä½“è¾¹æ¡†ç­‰éƒ¨åˆ†æ’é™¤åœ¨å±å¹•å¤–  
+		CRect rectWholeDlg;
+		CRect rectClient;
+		GetWindowRect(&rectWholeDlg);//å¾—åˆ°å½“å‰çª—ä½“çš„æ€»çš„ç›¸å¯¹äºå±å¹•çš„åæ ‡  
+		RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, reposQuery, &rectClient);//å¾—åˆ°å®¢æˆ·åŒºçª—å£åæ ‡  
+		ClientToScreen(&rectClient);//å°†å®¢æˆ·åŒºç›¸å¯¹çª—ä½“çš„åæ ‡è½¬ä¸ºç›¸å¯¹å±å¹•åæ ‡  
+		//GetDlgItem(IDC_PICTURE)->GetWindowRect(rectClient);//å¾—åˆ°PICTUREæ§ä»¶åæ ‡  
+
+		rectFullScreen.left = rectWholeDlg.left - rectClient.left;
+		rectFullScreen.top = rectWholeDlg.top - rectClient.top;
+		rectFullScreen.right = rectWholeDlg.right + g_iCurScreenWidth - rectClient.right;
+		rectFullScreen.bottom = rectWholeDlg.bottom + g_iCurScreenHeight - rectClient.bottom;
+
+		//è®¾ç½®çª—å£å¯¹è±¡å‚æ•°ï¼Œä¸ºå…¨å±åšå¥½å‡†å¤‡å¹¶è¿›å…¥å…¨å±çŠ¶æ€  
+		WINDOWPLACEMENT struWndpl;
+		struWndpl.length = sizeof(WINDOWPLACEMENT);
+		struWndpl.flags = 0;
+		struWndpl.showCmd = SW_SHOWNORMAL;
+		struWndpl.rcNormalPosition = rectFullScreen;
+		SetWindowPlacement(&struWndpl);//è¯¥å‡½æ•°è®¾ç½®æŒ‡å®šçª—å£çš„æ˜¾ç¤ºçŠ¶æ€å’Œæ˜¾ç¤ºå¤§å°ä½ç½®ç­‰ï¼Œæ˜¯æˆ‘ä»¬è¯¥ç¨‹åºæœ€ä¸ºé‡è¦çš„å‡½æ•°  
+
+		 
+		
+	}
+	else
+	{
+		GetDlgItem(IDC_PICTUREAREA)->SetWindowPlacement(&m_struOldWndpPic);
+		SetWindowPlacement(&m_struOldWndpl);
+		bFullScreen = false;
+	}
 
 
+	CDialogEx::OnLButtonDblClk(nFlags, point);
+}
+
+
+void CPictureShowerDlg::OnBnClickedButton1()
+{
+	childDialog childDialog;
+	childDialog.ShowWindow(SW_SHOW);
+	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+}
