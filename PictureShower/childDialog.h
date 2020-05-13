@@ -1,6 +1,7 @@
 #pragma once
 #include "afxwin.h"
 #include "SpecialEffectD3DShower.h"
+#include "PictureShowerDlg.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,8 +14,6 @@ extern "C" {
 }// endof extern "C"
 #endif
 
-
-// childDialog �Ի���
 
 class childDialog : public CDialogEx
 {
@@ -35,17 +34,30 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	CString m_CurrentPicture;
-	CString m_TransitionMode;
-	CString m_TransitionDuration;
-	CString m_StretchMode;
+	CString CHCurrentPicture;
+	CString CHTransitionMode;
+	CString CHTransitionDuration;
+	CString CHStretchMode;
+	CString CHtempText;
+	HANDLE CHhThread;
+	DWORD CHThreadID;
+	static UINT CHThreadFunc(LPVOID pParam);
+	void  CHprocess();
 
+private:
 
+	CWnd *mParentWnd;
+public:
+	CEdit CHDuration;
+	afx_msg void OnBnClickedChs();
+	afx_msg void OnBnClickedChclear();
+	afx_msg void OnEnChangeChduration();
+	afx_msg void OnEnChangeChmode();
+	afx_msg void OnBnClickedChreadpic();
+	afx_msg void OnBnClickedChquit();
+	afx_msg void OnBnClickedChplay();
 
+	BOOL OnInitDialog();
 
-	HANDLE hThread;
-	DWORD ThreadID;
-	static UINT ThreadFunc(LPVOID pParam); //�̺߳������������ڶ�����ʹ��static�������Σ�����static�������������ⶨ�塣
-	void  process(); //��ĳ�Ա������process()��������Ҫ�õ����������Ա����
-	void m_showWindow();
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 };

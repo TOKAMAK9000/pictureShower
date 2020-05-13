@@ -358,20 +358,6 @@ bool CD3DShower::RenderTexture(hvframe * frame, long lWidth, long lHeight)
 		return false;
 	}
 
-
-
-	/*
-
-	D3DXMATRIX matRotateX;    // a matrix to store the rotation information
-	D3DXMatrixIdentity(&matRotateX);
-	// build a matrix to rotate the model based on the increasing float value
-	D3DXMatrixRotationY(&matRotateX, 0.2f);
-
-	// tell Direct3D about our matrix
-	m_pDirect3DDevice->SetTransform(D3DTS_WORLD, &matRotateX);
-
-	*/
-
 	D3DXMATRIX matView;    // the view transform matrix
 
 	D3DXMatrixLookAtLH(&matView,

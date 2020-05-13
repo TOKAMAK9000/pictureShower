@@ -15,7 +15,7 @@ extern "C" {
 
 //extern BOOL initPictureEveryTime;
 
-// CPictureShowerDlg �Ի���
+// CPictureShowerDlg 
 class CPictureShowerDlg : public CDialogEx
 {
 public:
@@ -36,12 +36,13 @@ public:
 // ʵ��
 protected:
 	HICON m_hIcon;
+	CRect mainWindowRect;
 
-	// ���ɵ���Ϣӳ�亯��
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg LRESULT OnCHDlg(WPARAM wParam, LPARAM iParam);
 	DECLARE_MESSAGE_MAP()
 public:
 	CStatic m_Picture;
@@ -52,13 +53,11 @@ public:
 	bool DecodePicture(CString FileName);
 	afx_msg void OnDestroy();
 	void DrawPicture();
-	afx_msg void OnBnClickedPlay();
 	void DeletePicture();
 	CString m_TransitionDuration;
 	CString m_StretchMode;
 
 	//new
-	afx_msg void OnBnClickedCheck1();
 	bool initPictureEveryTime;
 	WINDOWPLACEMENT m_struOldWndpl;
 	WINDOWPLACEMENT m_struOldWndpPic;
@@ -66,5 +65,7 @@ public:
 	BOOL bFullScreen;
 
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
-	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedPlay();
+	void OnSize(UINT nType, int cx, int cy);
+	void ChangeSize(CWnd * pWnd, int cx, int cy);
 };

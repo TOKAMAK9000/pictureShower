@@ -197,6 +197,7 @@
     <ClInclude Include="D3DShower.h" />
     <ClInclude Include="PictureShower.h" />
     <ClInclude Include="PictureShowerDlg.h" />
+    <ClInclude Include="public.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SpecialEffectD3DShower.h" />
     <ClInclude Include="stdafx.h" />

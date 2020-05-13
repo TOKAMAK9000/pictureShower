@@ -5,6 +5,7 @@
 #include "PictureShowerDlg.h"
 #include "afxdialogex.h"
 #include "childDialog.h"
+#include "public.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -23,9 +24,6 @@ extern "C" {
 } // endof extern "C"
 #endif
 
-
-// ����Ӧ�ó��򡰹��ڡ��˵���� CAboutDlg �Ի���
-
 class CAboutDlg : public CDialogEx
 {
 public:
@@ -37,7 +35,6 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV ֧��
 
-// ʵ��
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -60,9 +57,7 @@ END_MESSAGE_MAP()
 CPictureShowerDlg::CPictureShowerDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CPictureShowerDlg::IDD, pParent)
 	, m_CurrentPicture(_T(""))
-	, m_TransitionMode(_T("12"))
-	, m_TransitionDuration(_T("3"))
-	, m_StretchMode(_T("1"))
+
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	frame = new hvframe();
@@ -74,10 +69,6 @@ void CPictureShowerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_PICTURE, m_Picture);
-	DDX_Text(pDX, IDC_CURRENTPICTURE, m_CurrentPicture);
-	DDX_Text(pDX, IDC_MODE, m_TransitionMode);
-	DDX_Text(pDX, IDC_EDIT1, m_TransitionDuration);
-	DDX_Text(pDX, IDC_EDIT2, m_StretchMode);
 }
 
 BEGIN_MESSAGE_MAP(CPictureShowerDlg, CDialogEx)
@@ -86,14 +77,12 @@ BEGIN_MESSAGE_MAP(CPictureShowerDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_READPICTUREFILE, &CPictureShowerDlg::OnBnClickedReadpicturefile)
 	ON_WM_DESTROY()
-	ON_BN_CLICKED(IDC_PLAY, &CPictureShowerDlg::OnBnClickedPlay)
-	ON_BN_CLICKED(CHECK1, &CPictureShowerDlg::OnBnClickedCheck1)
 	ON_WM_LBUTTONDBLCLK()
-	ON_BN_CLICKED(IDC_BUTTON1, &CPictureShowerDlg::OnBnClickedButton1)
+	ON_MESSAGE(WM_COMMAND, OnCHDlg)
+	ON_BN_CLICKED(IDC_PLAY, &CPictureShowerDlg::OnBnClickedPlay)
+	//ON_WM_SIZE(IDD_PICTURESHOWER_DIALOG, &CPictureShowerDlg::OnSize)
 END_MESSAGE_MAP()
 
-
-// CPictureShowerDlg ��Ϣ�������
 
 BOOL CPictureShowerDlg::OnInitDialog()
 {
@@ -101,9 +90,16 @@ BOOL CPictureShowerDlg::OnInitDialog()
 
 	// ��������...���˵�����ӵ�ϵͳ�˵��С�
 
-	// IDM_ABOUTBOX ������ϵͳ���Χ�ڡ�
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
+
+	childDialog *cdlg;
+	cdlg = new childDialog(this);
+	cdlg->Create(IDD_DIALOG1, NULL);
+	cdlg->ShowWindow(SW_SHOW);
+
+	CEdit *hidePlay = (CEdit*)GetDlgItem(IDC_PLAY);
+	hidePlay->ShowWindow(FALSE);
 
 	CMenu* pSysMenu = GetSystemMenu(FALSE);
 	if (pSysMenu != NULL)
@@ -119,21 +115,15 @@ BOOL CPictureShowerDlg::OnInitDialog()
 		}
 	}
 
-	// ���ô˶Ի����ͼ�ꡣ  ��Ӧ�ó��������ڲ��ǶԻ���ʱ����ܽ��Զ�
-	//  ִ�д˲���
-	SetIcon(m_hIcon, TRUE);			// ���ô�ͼ��
-	SetIcon(m_hIcon, FALSE);		// ����Сͼ��
-
-	// TODO:  �ڴ���Ӷ���ĳ�ʼ������
+	SetIcon(m_hIcon, TRUE);
+	SetIcon(m_hIcon, FALSE);		
 
 	InitWindow();
 
-	childDialog dlg;
-	dlg.m_showWindow();//创建副窗口
-	
-	return TRUE;  // ���ǽ��������õ��ؼ������򷵻� TRUE
+	return TRUE; 
 }
 
+//OnsysCommand，暂时不知道什么意思
 void CPictureShowerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
@@ -147,10 +137,8 @@ void CPictureShowerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 }
 
-// �����Ի��������С����ť������Ҫ����Ĵ���
-//  �����Ƹ�ͼ�ꡣ  ����ʹ���ĵ�/��ͼģ�͵� MFC Ӧ�ó���
-//  �⽫�ɿ���Զ���ɡ�
 
+//OnPaint？？
 void CPictureShowerDlg::OnPaint()
 {
 	if (IsIconic())
@@ -176,22 +164,25 @@ void CPictureShowerDlg::OnPaint()
 	}
 }
 
-//���û��϶���С������ʱϵͳ���ô˺���ȡ�ù��
-//��ʾ��
+
 HCURSOR CPictureShowerDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+LRESULT CPictureShowerDlg::OnCHDlg(WPARAM wParam, LPARAM iParam)
+{
+	return LRESULT();
 }
 
 
 
 void CPictureShowerDlg::OnBnClickedReadpicturefile()
 {
-	// TODO:  �ڴ���ӿؼ�֪ͨ����������
 	CFileDialog fileDlg(true, _T(""), _T("*.*"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("All File (*.*)|*.*||"), NULL); 
-	if (fileDlg.DoModal() == IDOK)    //�����Ի���
+	if (fileDlg.DoModal() == IDOK)
 	{    
-		m_CurrentPicture = fileDlg.GetPathName();//�õ��������ļ�����Ŀ¼����չ��   
+		m_CurrentPicture = fileDlg.GetPathName(); 
 		UpdateData(false);
 	}
 }
@@ -394,25 +385,6 @@ void CPictureShowerDlg::DrawPicture()
 }
 
 
-void CPictureShowerDlg::OnBnClickedPlay()
-{
-	// TODO:  �ڴ���ӿؼ�֪ͨ����������
-
-	UpdateData(true);
-
-	DeletePicture();
-
-	if (m_CurrentPicture != "")
-	{
-		DecodePicture(m_CurrentPicture);
-		m_D3DShower->m_DisplayMode = _ttoi(m_StretchMode);
-		m_D3DShower->m_TransitionMode = _ttoi(m_TransitionMode);
-		m_D3DShower->m_TransitionDuration = _ttoi(m_TransitionDuration);
-		DrawPicture();
-	}
-}
-
-
 void CPictureShowerDlg::DeletePicture()
 {
 	AVFrame * pAV = NULL;
@@ -430,18 +402,8 @@ void CPictureShowerDlg::DeletePicture()
 	}
 }
 
-void CPictureShowerDlg::OnBnClickedCheck1()
-{
-	if (BST_CHECKED == IsDlgButtonChecked(CHECK1))
-	{
-		m_D3DShower->initPictureEveryTime = true;
-	}
-	else
-	{
-		m_D3DShower->initPictureEveryTime = false;
-	}
-}
 
+//双击之后全屏
 void CPictureShowerDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	if (!bFullScreen)
@@ -494,10 +456,18 @@ void CPictureShowerDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 	CDialogEx::OnLButtonDblClk(nFlags, point);
 }
 
-
-void CPictureShowerDlg::OnBnClickedButton1()
+void CPictureShowerDlg::OnBnClickedPlay()
 {
-	childDialog childDialog;
-	childDialog.ShowWindow(SW_SHOW);
-	// TODO:  在此添加控件通知处理程序代码
+	DeletePicture();
+
+	if (mOption.PfilePath != "")
+	{
+		DecodePicture(mOption.PfilePath);
+		m_D3DShower->initPictureEveryTime = mOption.PclearPicture;
+		m_D3DShower->m_DisplayMode = _ttoi(mOption.PStretch);
+		m_D3DShower->m_TransitionMode = _ttoi(mOption.PTransitionMode);
+		m_D3DShower->m_TransitionDuration = _ttoi(mOption.PDuration);
+		DrawPicture();
+	}
 }
+
