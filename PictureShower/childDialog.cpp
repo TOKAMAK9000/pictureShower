@@ -5,6 +5,7 @@
 #include "afxdialogex.h"
 #include "childDialog.h"
 #include "public.h"
+#include "locale.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -33,7 +34,7 @@ IMPLEMENT_DYNAMIC(childDialog, CDialogEx)
 childDialog::childDialog(CWnd* pParent /*=NULL*/)
 	: CDialogEx(childDialog::IDD, pParent)
 	, CHCurrentPicture(_T(""))
-	, CHTransitionMode(_T("12"))
+	, CHTransitionMode(_T("0"))
 	, CHTransitionDuration(_T("3"))
 {
 	//LONG style = GetWindowLong(m_hWnd, GWL_STYLE); //得到窗口类型
@@ -52,6 +53,7 @@ void childDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_CHDURATION, CHTransitionDuration);
 	DDX_Text(pDX, IDC_CHTRANSMODE1, CHTransitionMode);
 	DDX_Text(pDX, IDC_CHCURRENTPICTURE, mOption.PfilePath);
+	DDX_Control(pDX, IDC_LIST1, mList);
 }
 
 UINT childDialog::CHThreadFunc(LPVOID pParam)
@@ -157,9 +159,18 @@ void childDialog::OnBnClickedChplay()
 
 BOOL childDialog::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
 
+	CDialogEx::OnInitDialog();
+	
 	//this->SetWindowPos(&wndTopMost, 0, 0, 0, 0, SWP_NOSIZE);
+	CRect mListRect;
+	mList.GetClientRect(&mListRect);
+	mList.SetExtendedStyle(mList.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+	mList.InsertColumn(0, _T("Position"), LVCFMT_CENTER, mListRect.Width() / 4, 0);
+	mList.InsertColumn(1, _T("Effect"), LVCFMT_CENTER, mListRect.Width() / 4, 1);
+	mList.InsertColumn(2, _T("Path"), LVCFMT_CENTER, mListRect.Width() / 2, 2);
+
+
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE

@@ -12,7 +12,7 @@ public:
 public:
 	option() {
 		PDuration = _T("3");
-		PTransitionMode = _T("12");
+		PTransitionMode = _T("0");
 		PfilePath = _T("");
 		PclearPicture = 0;
 		PStretch = _T("0");

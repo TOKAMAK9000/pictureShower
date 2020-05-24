@@ -60,4 +60,7 @@ public:
 	BOOL OnInitDialog();
 
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+	afx_msg void OnLvnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnStnClickedChstatic5();
+	CListCtrl mList;
 };

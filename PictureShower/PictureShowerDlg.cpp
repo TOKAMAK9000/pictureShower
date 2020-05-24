@@ -88,7 +88,6 @@ BOOL CPictureShowerDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// ��������...���˵�����ӵ�ϵͳ�˵��С�
 
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
@@ -414,12 +413,12 @@ void CPictureShowerDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 		int g_iCurScreenWidth = GetSystemMetrics(SM_CXSCREEN);
 		int g_iCurScreenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-		//将PICTURE控件的坐标设为全屏大小 
-		GetDlgItem(IDC_PICTUREAREA)->MoveWindow(CRect(0, 0, g_iCurScreenWidth, g_iCurScreenHeight));
-
 		//用m_struOldWndpl得到当前窗口的显示状态和窗体位置，以供退出全屏后使用  
 		GetWindowPlacement(&m_struOldWndpl);
 		GetDlgItem(IDC_PICTUREAREA)->GetWindowPlacement(&m_struOldWndpPic);
+
+		//将PICTURE控件的坐标设为全屏大小 
+		GetDlgItem(IDC_PICTUREAREA)->MoveWindow(CRect(0, 0, g_iCurScreenWidth, g_iCurScreenHeight));
 
 		//计算出窗口全屏显示客户端所应该设置的窗口大小，主要为了将不需要显示的窗体边框等部分排除在屏幕外  
 		CRect rectWholeDlg;
@@ -427,7 +426,6 @@ void CPictureShowerDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 		GetWindowRect(&rectWholeDlg);//得到当前窗体的总的相对于屏幕的坐标  
 		RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, reposQuery, &rectClient);//得到客户区窗口坐标  
 		ClientToScreen(&rectClient);//将客户区相对窗体的坐标转为相对屏幕坐标  
-		//GetDlgItem(IDC_PICTURE)->GetWindowRect(rectClient);//得到PICTURE控件坐标  
 
 		rectFullScreen.left = rectWholeDlg.left - rectClient.left;
 		rectFullScreen.top = rectWholeDlg.top - rectClient.top;
@@ -441,12 +439,11 @@ void CPictureShowerDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 		struWndpl.showCmd = SW_SHOWNORMAL;
 		struWndpl.rcNormalPosition = rectFullScreen;
 		SetWindowPlacement(&struWndpl);//该函数设置指定窗口的显示状态和显示大小位置等，是我们该程序最为重要的函数  
-
-		 
 		
 	}
 	else
 	{
+		//GetDlgItem(IDC_PICTURE)->GetWindowRect(rectClient);//得到PICTURE控件坐标  
 		GetDlgItem(IDC_PICTUREAREA)->SetWindowPlacement(&m_struOldWndpPic);
 		SetWindowPlacement(&m_struOldWndpl);
 		bFullScreen = false;
@@ -454,6 +451,16 @@ void CPictureShowerDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 
 	CDialogEx::OnLButtonDblClk(nFlags, point);
+	DeletePicture();
+	if (mOption.PfilePath != "")
+	{
+		DecodePicture(mOption.PfilePath);
+		m_D3DShower->initPictureEveryTime = mOption.PclearPicture;
+		m_D3DShower->m_DisplayMode = _ttoi(mOption.PStretch);
+		m_D3DShower->m_TransitionMode = 0;
+		m_D3DShower->m_TransitionDuration = _ttoi(mOption.PDuration);
+		DrawPicture();
+	}
 }
 
 void CPictureShowerDlg::OnBnClickedPlay()

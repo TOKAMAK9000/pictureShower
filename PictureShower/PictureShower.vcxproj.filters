@@ -53,9 +53,6 @@
     <ClCompile Include="PictureShower.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PictureShowerDlg.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -68,10 +65,10 @@
     <ClCompile Include="D3D9TextureShower.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="speechRecognizerDemo.cpp">
+    <ClCompile Include="childDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="childDialog.cpp">
+    <ClCompile Include="PictureShowerDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -37,7 +37,7 @@ class CD3DShower
 public:
 	HWND mHand;
 	CRect m_rtViewport;
-	int m_DisplayMode = 12;
+	int m_DisplayMode = 0;
 
 	D3DPRESENT_PARAMETERS d3dpp;
 	CRITICAL_SECTION  m_critial;
