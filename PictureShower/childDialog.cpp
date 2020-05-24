@@ -1,5 +1,3 @@
-// childDialog.cpp : ʵ���ļ�
-//
 #include "stdafx.h"
 #include "PictureShower.h"
 #include "afxdialogex.h"
