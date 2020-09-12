@@ -1,8 +1,8 @@
 #pragma once
 #include <Windows.h>
 #include <mmsystem.h>
-#include <fstream>
-#include <iostream>
+//#include <fstream>
+//#include <iostream>
 #include "speech.h"
 
 #pragma comment(lib, "winmm.lib")

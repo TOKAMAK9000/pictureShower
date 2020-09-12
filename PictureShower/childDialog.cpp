@@ -48,6 +48,8 @@ childDialog::~childDialog()
 {
 	delete frame;
 	delete m_D3DShower;
+	//delete this;
+	delete mParentWnd;
 }
 
 void childDialog::DoDataExchange(CDataExchange* pDX)
@@ -57,6 +59,7 @@ void childDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_CHDURATION, CHTransitionDuration);
 	DDX_Text(pDX, IDC_CHTRANSMODE1, CHTransitionMode);
 	DDX_Text(pDX, IDC_CHCURRENTPICTURE, mOption.PfilePath);
+	DDX_Text(pDX, IDC_VOICECONTENT, mOption.PVoice);
 	DDX_Control(pDX, IDC_LIST1, mList);
 }
 
@@ -201,12 +204,12 @@ void childDialog::OnBnClickedChgetvoice()
 	
 	Voice v;
 	std::string get;
-	CString show;
+	mOption.PVoice = CA2T(v.recognize().c_str());
 
-	v.recognize();
-
+	//delete  v;
+	/*
 	int a;
 	show = get.c_str();
 	this->SetDlgItemTextW(IDC_VOICECONTENT, show);
-
+	*/
 }

@@ -2,7 +2,6 @@
 #include "afxwin.h"
 #include "SpecialEffectD3DShower.h"
 #include "PictureShower.h"
-#include "childDialog.h"
 
 
 

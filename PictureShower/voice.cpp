@@ -19,7 +19,7 @@ std::string Voice::ASR(aip::Speech * client)
 
 int Voice::record()
 {
-	HANDLE          wait;
+	HANDLE wait;
 	waveform.wFormatTag = WAVE_FORMAT_PCM;//声音格式为PCM
 	waveform.nSamplesPerSec = 16000;//採样率，16000次/秒
 	waveform.wBitsPerSample = 16;//採样比特，16bits/次
@@ -34,7 +34,7 @@ int Voice::record()
 
 	//建立两个数组（这里能够建立多个数组）用来缓冲音频数据
 	DWORD bufsize = 1024 * 100;//每次开辟10k的缓存存储录音数据
-	int i = 5;
+	int i = 3;
 	fopen_s(&pf, "C:\\Users\\TOKAMAK\\Desktop\\te.pcm", "wb");
 	while (i--)//录制20左右秒声音，结合音频解码和网络传输能够改动为实时录音播放的机制以实现对讲功能
 	{
@@ -52,7 +52,6 @@ int Voice::record()
 		waveInReset(hWaveIn);//停止录音
 		fwrite(pBuffer1, 1, wHdr1.dwBytesRecorded, pf);
 		delete [] pBuffer1;
-		printf("%ds  ", i);
 	}
 	fclose(pf);
 
@@ -75,6 +74,7 @@ std::string Voice::recognize()
 	// 语音识别调用
 	result = ASR(client);
 
+	delete client;
 	std::string get;
 	get = transfer2Chinese(result);
 

@@ -2,6 +2,8 @@
 #include "PictureShowerDlg.h"
 #include "afxdialogex.h"
 #include "public.h"
+#include "childDialog.h"
+
 
 
 #ifdef _DEBUG
@@ -63,7 +65,9 @@ CPictureShowerDlg::CPictureShowerDlg(CWnd* pParent /*=NULL*/)
 
 CPictureShowerDlg::~CPictureShowerDlg() {
 	//delete cdlg;
-	//delete frame;
+	delete frame;
+	delete m_D3DShower;
+
 }
 
 void CPictureShowerDlg::DoDataExchange(CDataExchange* pDX)
@@ -197,7 +201,6 @@ int CPictureShowerDlg::InitWindow()
 	if (m_D3DShower->InitD3D(m_Picture.GetSafeHwnd())<0)
 		return -1;
 	
-	delete m_D3DShower;
 	return 0;
 }
 
@@ -483,5 +486,6 @@ void CPictureShowerDlg::OnClose()
 {
 	//delete cdlg;
 	OnCancel();
+	DeletePicture();
 }
 
