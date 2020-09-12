@@ -2,6 +2,10 @@
 #include "afxwin.h"
 #include "SpecialEffectD3DShower.h"
 #include "PictureShowerDlg.h"
+#include "PictureShower.h"
+#include "voice.h"
+#include "public.h"
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,7 +15,7 @@ extern "C" {
 #include "libavformat/avformat.h"
 #include "libswscale/swscale.h"
 #ifdef __cplusplus
-}// endof extern "C"
+}// endof extern "C" 
 #endif
 
 
@@ -63,4 +67,5 @@ public:
 	afx_msg void OnLvnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnStnClickedChstatic5();
 	CListCtrl mList;
+	afx_msg void OnBnClickedChgetvoice();
 };

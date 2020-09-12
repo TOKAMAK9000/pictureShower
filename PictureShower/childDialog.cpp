@@ -1,14 +1,18 @@
 #include "stdafx.h"
-#include "PictureShower.h"
-#include "afxdialogex.h"
 #include "childDialog.h"
-#include "public.h"
+#include "afxdialogex.h"
 #include "locale.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
+/*
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+*/
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -29,7 +33,7 @@ option mOption;
 
 IMPLEMENT_DYNAMIC(childDialog, CDialogEx)
 
-childDialog::childDialog(CWnd* pParent /*=NULL*/)
+childDialog::childDialog(CWnd* pParent)
 	: CDialogEx(childDialog::IDD, pParent)
 	, CHCurrentPicture(_T(""))
 	, CHTransitionMode(_T("0"))
@@ -42,6 +46,8 @@ childDialog::childDialog(CWnd* pParent /*=NULL*/)
 
 childDialog::~childDialog()
 {
+	delete frame;
+	delete m_D3DShower;
 }
 
 void childDialog::DoDataExchange(CDataExchange* pDX)
@@ -81,6 +87,7 @@ BEGIN_MESSAGE_MAP(childDialog, CDialogEx)
 	ON_BN_CLICKED(IDC_CHQUIT, &childDialog::OnBnClickedChquit)
 	ON_BN_CLICKED(IDC_CHPLAY, &childDialog::OnBnClickedChplay)
 	ON_WM_SYSCOMMAND()
+	ON_BN_CLICKED(IDC_CHGETVOICE, &childDialog::OnBnClickedChgetvoice)
 END_MESSAGE_MAP()
 
 
@@ -140,9 +147,11 @@ void childDialog::OnBnClickedChreadpic()
 
 void childDialog::OnBnClickedChquit()
 {
+
 	mParentWnd = GetParent();
 	::SendMessage(mParentWnd->m_hWnd, WM_CLOSE, 0, 0);
-	CDialogEx::OnCancel();
+
+	CDialogEx::OnDestroy();
 }
 
 
@@ -184,4 +193,20 @@ void childDialog::OnSysCommand(UINT nID, LPARAM lParam)
 	{
 		CDialog::OnSysCommand(nID, lParam);
 	}
+}
+
+
+void childDialog::OnBnClickedChgetvoice()
+{
+	
+	Voice v;
+	std::string get;
+	CString show;
+
+	v.recognize();
+
+	int a;
+	show = get.c_str();
+	this->SetDlgItemTextW(IDC_VOICECONTENT, show);
+
 }

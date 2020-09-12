@@ -1,6 +1,11 @@
 #pragma once
 #include "afxwin.h"
 #include "SpecialEffectD3DShower.h"
+#include "PictureShower.h"
+#include "childDialog.h"
+
+
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,13 +24,14 @@ extern "C" {
 class CPictureShowerDlg : public CDialogEx
 {
 public:
+	//childDialog * cdlg = NULL;//为什么不能放在这个文件中
 	hvframe * frame = NULL;
 	CSpecialEffectD3DShower * m_D3DShower = NULL;
-// ����
-public:
-	CPictureShowerDlg(CWnd* pParent = NULL);	// ��׼���캯��
 
-// �Ի�������
+public:
+	CPictureShowerDlg(CWnd* pParent = NULL);
+	~CPictureShowerDlg();
+
 	enum { IDD = IDD_PICTURESHOWER_DIALOG };
 
 	protected:
@@ -66,6 +72,8 @@ public:
 
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnBnClickedPlay();
+	afx_msg void OnClose();
+	afx_msg void ONCloseDlg();
 	void OnSize(UINT nType, int cx, int cy);
 	void ChangeSize(CWnd * pWnd, int cx, int cy);
 };

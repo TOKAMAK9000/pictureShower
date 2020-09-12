@@ -1,11 +1,8 @@
-// PictureShowerDlg.cpp : ʵ���ļ�
-
 #include "stdafx.h"
-#include "PictureShower.h"
 #include "PictureShowerDlg.h"
 #include "afxdialogex.h"
-#include "childDialog.h"
 #include "public.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -62,7 +59,11 @@ CPictureShowerDlg::CPictureShowerDlg(CWnd* pParent /*=NULL*/)
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	frame = new hvframe();
 	frame->pAVFrame = NULL;
+}
 
+CPictureShowerDlg::~CPictureShowerDlg() {
+	//delete cdlg;
+	//delete frame;
 }
 
 void CPictureShowerDlg::DoDataExchange(CDataExchange* pDX)
@@ -87,7 +88,6 @@ END_MESSAGE_MAP()
 BOOL CPictureShowerDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
 
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
@@ -118,7 +118,6 @@ BOOL CPictureShowerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		
 
 	InitWindow();
-
 	return TRUE; 
 }
 
@@ -197,6 +196,8 @@ int CPictureShowerDlg::InitWindow()
 
 	if (m_D3DShower->InitD3D(m_Picture.GetSafeHwnd())<0)
 		return -1;
+	
+	delete m_D3DShower;
 	return 0;
 }
 
@@ -476,5 +477,11 @@ void CPictureShowerDlg::OnBnClickedPlay()
 		m_D3DShower->m_TransitionDuration = _ttoi(mOption.PDuration);
 		DrawPicture();
 	}
+}
+
+void CPictureShowerDlg::OnClose()
+{
+	//delete cdlg;
+	OnCancel();
 }
 

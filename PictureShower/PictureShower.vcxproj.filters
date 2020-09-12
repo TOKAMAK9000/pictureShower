@@ -48,6 +48,24 @@
     <ClInclude Include="public.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="base64.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="http.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="speech.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="voice.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PictureShower.cpp">
@@ -69,6 +87,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="PictureShowerDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="voice.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
