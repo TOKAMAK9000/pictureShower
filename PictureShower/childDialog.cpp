@@ -59,7 +59,7 @@ void childDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_CHDURATION, CHTransitionDuration);
 	DDX_Text(pDX, IDC_CHTRANSMODE1, CHTransitionMode);
 	DDX_Text(pDX, IDC_CHCURRENTPICTURE, mOption.PfilePath);
-	DDX_Text(pDX, IDC_VOICECONTENT, mOption.PVoice);
+	DDX_Text(pDX, IDC_VOICECONTENT, mOption.PVoice_text);
 	DDX_Control(pDX, IDC_LIST1, mList);
 }
 
@@ -173,7 +173,6 @@ BOOL childDialog::OnInitDialog()
 	CDialogEx::OnInitDialog();
 	
 	//this->SetWindowPos(&wndTopMost, 0, 0, 0, 0, SWP_NOSIZE);
-	CRect mListRect;
 	mList.GetClientRect(&mListRect);
 	mList.SetExtendedStyle(mList.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	mList.InsertColumn(0, _T("Position"), LVCFMT_CENTER, mListRect.Width() / 4, 0);
@@ -204,8 +203,22 @@ void childDialog::OnBnClickedChgetvoice()
 	
 	Voice v;
 	std::string get;
-	mOption.PVoice = CA2T(v.recognize().c_str());
+	//mOption.PVoice_ins = v.result();
 
+	int w = v.result();
+	mOption.PTransitionMode.Format(_T("%d"), w);
+
+	if (w = -1) {
+		mOption.PVoice_text = _T("未能成功匹配指令");
+	}
+	else {
+		mOption.PVoice_text = v.voiceList[w].c_str();
+	}
+
+	SetDlgItemText(IDC_CHTRANSMODE1, mOption.PTransitionMode);
+	UpdateData();
+	OnBnClickedChplay();
+	//this->SetDlgItemTextW(IDC_VOICECONTENT, mOption.PVoice_text);
 	//delete  v;
 	/*
 	int a;

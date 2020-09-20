@@ -1,11 +1,14 @@
 #pragma once
 #include <Windows.h>
 #include <mmsystem.h>
+
 //#include <fstream>
-//#include <iostream>
+//#include <io
 #include "speech.h"
 
 #pragma comment(lib, "winmm.lib")
+
+//#define 
 
 class Voice {
 public:
@@ -15,8 +18,13 @@ public:
 	WAVEHDR wHdr1; //採集音频时包括数据缓存的结构体
 	FILE *pf;
 
+	Voice();
+	~Voice();
+	int result();
 	std::string ASR(aip::Speech* client);
 	int record();
-	std::string recognize();
 	std::string transfer2Chinese(std::string unicode);
+	int recognize(std::string result);
+	std::string *voiceList = new std::string[25];
+	
 };

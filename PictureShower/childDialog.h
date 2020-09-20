@@ -45,6 +45,8 @@ public:
 	CString CHtempText;
 	HANDLE CHhThread;
 	DWORD CHThreadID;
+	CRect mListRect;
+
 	static UINT CHThreadFunc(LPVOID pParam);
 	void  CHprocess();
 

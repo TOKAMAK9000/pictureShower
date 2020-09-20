@@ -7,7 +7,8 @@ public:
 	CString PTransitionMode;
 	CString PfilePath;
 	CString PStretch;
-	CString PVoice;
+	CString PVoice_text;
+	int PVoice_ins;
 	bool PclearPicture;
 
 public:
@@ -17,7 +18,8 @@ public:
 		PfilePath = _T("");
 		PclearPicture = 0;
 		PStretch = _T("0");
-		PVoice = _T("");
+		PVoice_text = _T("");
+		PVoice_ins = -1;
 	}
 };
 
